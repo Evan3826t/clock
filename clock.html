@@ -6,32 +6,69 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <style>
+        body{
+            background-image: url(./bg.jpg);
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
         #clock {
             width: 500px;
             height: 500px;
             border-radius: 50%;
             background: black;
             position: relative;
+            margin: auto;
+            margin-top: 100px;
+        }
+        #circle{
+            width: 430px;
+            height: 430px;
+            border-radius: 50%;
+            background: black;
+            position: absolute;
+            top: 35px;
+            left: 35px;
+            z-index: 2;
+        }
+        #circle2{
+            width: 230px;
+            height: 230px;
+            border-radius: 50%;
+            background: black;
+            position: absolute;
+            top: 135px;
+            left: 135px;
+            z-index: 15;
+        }
+        P{
+            margin-top: -280px;
+            text-align: center;
+            color:rgb(175, 124, 223);
+            position: relative;
+            z-index: 100;
+            font-size: 50px;
         }
 
         #second {
             position: absolute;
-            width: 50%;
-            height: 6px;
+            width: 52%;
+            height: 30px;
             background: orange;
-            top: calc(50% - 3px);
+            top: calc(50% - 14px);
             transform: rotate(90deg);
             transform-origin: right center;
             border-radius: 3px;
+            left: -2%;
+            z-index: -50;
         }
 
         #minute {
             position: absolute;
             width: 45%;
             left: 5%;
-            height: 6px;
+            height: 30px;
             background: aqua;
-            top: calc(50% - 3px);
+            top: calc(50% - 14px);
             transform: rotate(90deg);
             transform-origin: right center;
             border-radius: 3px;
@@ -47,36 +84,76 @@
             transform: rotate(90deg);
             transform-origin: right center;
             border-radius: 3px;
+            z-index: 10;
         }
     </style>
 </head>
 <body>
     <div id="clock">
+        <div id="circle"></div>
+        <div id="circle2"></div>
         <div id="hour"></div>
         <div id="minute"></div>
         <div id="second"></div>
     </div>
-    <p>現在時間: <span id="time"></span></p>
+    <p><span id="time"></span></p>
+    <script src="jquery-3.4.1.min.js"></script>
     <script>
         let hour = document.getElementById("hour");
         let minute = document.getElementById("minute");
         let second = document.getElementById("second");
         let time = document.getElementById("time");
-
+        let date = new Date();
+        let h = date.getHours();
+        let m = date.getMinutes();
+        let s = date.getSeconds();
+        for( let i = 0;i < s; i++ ){
+            $("#clock").append(`<div id='second' style='transform:rotate( ${i*6+90}deg)'></div>`);
+        }
+        for( let i = 0; i < m; i++ ){
+            $("#clock").append(`<div id='minute' style='transform:rotate( ${i*6+90}deg)'></div>`);
+        }
+        if(h>12){
+            h -= 12;
+        }
+        for( let i = 0; i < h*30; i++ ){
+            $("#clock").append(`<div id='hour' style='transform:rotate( ${i+90}deg)'></div>`);
+        }
         let clock = () => {
             let date = new Date();
             let h = date.getHours();
             let m = date.getMinutes();
             let s = date.getSeconds();
-            hour.style.transform = `rotate( ${h*30+90}deg)`;
-            minute.style.transform = `rotate( ${m*6+90}deg)`;
-            second.style.transform = `rotate( ${s*6+90}deg)`;
+            $("#clock").append(`<div id='second' style='transform:rotate( ${s*6+90}deg)'></div>`);
+            $("#clock").append(`<div id='minute' style='transform:rotate( ${m*6+90}deg)'></div>`);
+            if(h>12){
+            h -= 12;
+            }
+            for( let i = 0; i < h*30; i++ ){
+            $("#clock").append(`<div id='hour' style='transform:rotate( ${i+90}deg)'></div>`);
+            }            
+            // hour.style.transform = `rotate( ${h*30+90}deg)`;
+            // minute.style.transform = `rotate( ${m*6+90}deg)`;
+            // second.style.transform = `rotate( ${s*6+90}deg)`;
             
+            if(s == 0){
+                $("div").remove("#second");
+                $("#clock").append(`<div id='second' style='transform:rotate( ${0*6+90}deg)'></div>`);
+            }
+            if(m == 0){
+                $("div").remove("#minute");
+                $("#clock").append(`<div id='minute' style='transform:rotate( ${0*6+90}deg)'></div>`);
+            }
+            if(h == 0){
+                $("div").remove("#hour");
+                $("#clock").append(`<div id='hour' style='transform:rotate( ${0*6+90}deg)'></div>`);
+            }
+                
             let y = date.getFullYear();
             let mon = date.getMonth()+1;
             let d = date.getDate();
 
-            time.innerText = y+"年"+mon+"月"+d+"日 "+h+"點"+m+"分"+s+"秒";
+            time.innerText = h+":"+m+":"+s;
             // time.innerText  = date.toLocaleString("zh-tw");
         }
 
